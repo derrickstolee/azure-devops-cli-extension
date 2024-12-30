@@ -157,7 +157,7 @@ def create_pull_request(project=None, repository=None, source_branch=None, targe
         organization=organization,
         project=project,
         repo=repository)
-    source_branch, target_branch = _get_branches_for_pull_request(
+    source_branch, target_branch, guessed_target = _get_branches_for_pull_request(
         organization, project, repository, source_branch, target_branch, detect)
     client = get_git_client(organization)
     multi_line_description = None
@@ -181,6 +181,12 @@ def create_pull_request(project=None, repository=None, source_branch=None, targe
     if pr.source_ref_name == pr.target_ref_name:
         raise CLIError('The source branch, "{}", can not be the same as the target branch.'.format
                        (pr.source_ref_name))
+
+    # When we did not receive a specific target ref from the user, then use this
+    # option to possibly engage the server-side choice. The server may not have
+    # this enabled based on feature flags, preview features, or ADO server version.
+    if guessed_target:
+            pr.ignore_target_ref_and_choose_dynamically = True
 
     if optional_reviewers is not None:
         optional_reviewers = list(set(x.lower() for x in optional_reviewers))
@@ -263,13 +269,15 @@ def _get_branches_for_pull_request(organization, project, repository, source_bra
     else:
         if source_branch is None:
             raise ValueError('--source-branch is a required argument.')
+    guessed_target = False
     if target_branch is None:
         if project is not None and repository is not None:
             target_branch = _get_default_branch(organization, project, repository)
+            guessed_target = True
         if target_branch is None:
             raise ValueError('The target branch could not be detected,'
                              'please provide the --target-branch argument.')
-    return source_branch, target_branch
+    return source_branch, target_branch, guessed_target
 
 
 def update_pull_request(id, title=None, description=None, auto_complete=None,  # pylint: disable=redefined-builtin
