@@ -1434,10 +1434,11 @@ class GitPullRequest(Model):
         'target_ref_name': {'key': 'targetRefName', 'type': 'str'},
         'title': {'key': 'title', 'type': 'str'},
         'url': {'key': 'url', 'type': 'str'},
-        'work_item_refs': {'key': 'workItemRefs', 'type': '[ResourceRef]'}
+        'work_item_refs': {'key': 'workItemRefs', 'type': '[ResourceRef]'},
+        'ignore_target_ref_and_choose_dynamically': {'key': 'ignoreTargetRefAndChooseDynamically', 'type': 'bool'}
     }
 
-    def __init__(self, _links=None, artifact_id=None, auto_complete_set_by=None, closed_by=None, closed_date=None, code_review_id=None, commits=None, completion_options=None, completion_queue_time=None, created_by=None, creation_date=None, description=None, fork_source=None, is_draft=None, labels=None, last_merge_commit=None, last_merge_source_commit=None, last_merge_target_commit=None, merge_failure_message=None, merge_failure_type=None, merge_id=None, merge_options=None, merge_status=None, pull_request_id=None, remote_url=None, repository=None, reviewers=None, source_ref_name=None, status=None, supports_iterations=None, target_ref_name=None, title=None, url=None, work_item_refs=None):
+    def __init__(self, _links=None, artifact_id=None, auto_complete_set_by=None, closed_by=None, closed_date=None, code_review_id=None, commits=None, completion_options=None, completion_queue_time=None, created_by=None, creation_date=None, description=None, fork_source=None, is_draft=None, labels=None, last_merge_commit=None, last_merge_source_commit=None, last_merge_target_commit=None, merge_failure_message=None, merge_failure_type=None, merge_id=None, merge_options=None, merge_status=None, pull_request_id=None, remote_url=None, repository=None, reviewers=None, source_ref_name=None, status=None, supports_iterations=None, target_ref_name=None, title=None, url=None, work_item_refs=None, ignore_target_ref_and_choose_dynamically=False):
         super(GitPullRequest, self).__init__()
         self._links = _links
         self.artifact_id = artifact_id
@@ -1473,6 +1474,7 @@ class GitPullRequest(Model):
         self.title = title
         self.url = url
         self.work_item_refs = work_item_refs
+        self.ignore_target_ref_and_choose_dynamically = ignore_target_ref_and_choose_dynamically
 
 
 class GitPullRequestChange(Model):
